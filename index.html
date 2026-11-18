@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ChromaLab — a transparent colorimetric and print-production workbench. Calculated colorimetry and physical print measurement are reported separately."
+    />
+    <title>ChromaLab — Colorimetric &amp; Print Workbench</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230e1620'/><rect x='6' y='8' width='20' height='4' fill='%2322d3ee'/><rect x='6' y='14' width='20' height='4' fill='%2338bdf8'/><rect x='6' y='20' width='20' height='4' fill='%2367e8f9'/></svg>"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#workbench">Skip to the workbench</a>
+
+    <header class="masthead">
+      <div class="masthead__brand">
+        <svg class="spectral-mark" viewBox="0 0 40 32" aria-hidden="true" focusable="false">
+          <rect x="2" y="4" width="36" height="6" rx="1" />
+          <rect x="2" y="13" width="36" height="6" rx="1" />
+          <rect x="2" y="22" width="36" height="6" rx="1" />
+        </svg>
+        <span class="wordmark">ChromaLab</span>
+      </div>
+      <p class="masthead__tagline">Follow every conversion.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Workbench sections">
+      <button class="tab" type="button" data-panel="conversion" aria-selected="true">
+        Conversion
+      </button>
+      <button class="tab" type="button" data-panel="print" aria-selected="false">Print</button>
+      <button class="tab" type="button" data-panel="qc" aria-selected="false">Quality control</button>
+      <button class="tab" type="button" data-panel="references" aria-selected="false">References</button>
+    </nav>
+
+    <main id="workbench" class="workbench">
+      <!-- ───────────────────────── Conversion ───────────────────────── -->
+      <section class="panel" data-panel="conversion" aria-labelledby="conversion-heading">
+        <h1 id="conversion-heading" class="panel__title">Conversion</h1>
+        <p class="panel__intro">
+          Calculated colorimetry from the sRGB/D65 pipeline. These values are derived from
+          formulas, not measured from a physical sample.
+        </p>
+
+        <div class="bench">
+          <!-- Sample input -->
+          <div class="bench__column bench__column--input">
+            <section class="card" aria-labelledby="sample-heading">
+              <h2 id="sample-heading" class="card__title">Sample</h2>
+
+              <div class="field-group" role="radiogroup" aria-label="Input colour space">
+                <button class="chip chip--active" type="button" data-input-space="rgb" role="radio" aria-checked="true">
+                  RGB / HEX
+                </button>
+                <button class="chip" type="button" data-input-space="lab" role="radio" aria-checked="false">
+                  Lab
+                </button>
+                <button class="chip" type="button" data-input-space="lch" role="radio" aria-checked="false">
+                  LCh
+                </button>
+              </div>
+
+              <div class="fields" data-space="rgb">
+                <label class="field">
+                  <span class="field__label">Red</span>
+                  <input type="number" id="in-r" value="255" min="0" max="255" step="1" inputmode="numeric" />
+                </label>
+                <label class="field">
+                  <span class="field__label">Green</span>
+                  <input type="number" id="in-g" value="0" min="0" max="255" step="1" inputmode="numeric" />
+                </label>
+                <label class="field">
+                  <span class="field__label">Blue</span>
+                  <input type="number" id="in-b" value="0" min="0" max="255" step="1" inputmode="numeric" />
+                </label>
+                <label class="field field--wide">
+                  <span class="field__label">Hex</span>
+                  <input type="text" id="in-hex" value="#FF0000" spellcheck="false" autocomplete="off" />
+                </label>
+              </div>
+
+              <div class="fields" data-space="lab" hidden>
+                <label class="field">
+                  <span class="field__label">L*</span>
+                  <input type="number" id="in-l" value="53.24" step="0.01" />
+                </label>
+                <label class="field">
+                  <span class="field__label">a*</span>
+                  <input type="number" id="in-a" value="80.09" step="0.01" />
+                </label>
+                <label class="field">
+                  <span class="field__label">b*</span>
+                  <input type="number" id="in-b-lab" value="67.2" step="0.01" />
+                </label>
+              </div>
+
+              <div class="fields" data-space="lch" hidden>
+                <label class="field">
+                  <span class="field__label">L*</span>
+                  <input type="number" id="in-lch-l" value="53.24" step="0.01" />
+                </label>
+                <label class="field">
+                  <span class="field__label">C*</span>
+                  <input type="number" id="in-c" value="104.55" step="0.01" />
+                </label>
+                <label class="field">
+                  <span class="field__label">h°</span>
+                  <input type="number" id="in-h" value="40.0" step="0.01" min="0" max="360" />
+                </label>
+              </div>
+
+              <p class="field__error" id="input-error" role="alert" hidden></p>
+            </section>
+
+            <section class="card" aria-labelledby="assumptions-heading">
+              <h2 id="assumptions-heading" class="card__title">Assumptions</h2>
+              <dl class="assumptions">
+                <div>
+                  <dt>Reference white</dt>
+                  <dd>
+                    <select id="white-point">
+                      <option value="D65" selected>D65 (sRGB)</option>
+                      <option value="D50">D50 (print)</option>
+                    </select>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Observer</dt>
+                  <dd>CIE 1931 2° standard observer</dd>
+                </div>
+                <div>
+                  <dt>Adaptation</dt>
+                  <dd>Bradford CAT</dd>
+                </div>
+              </dl>
+            </section>
+          </div>
+
+          <!-- Swatch and results -->
+          <div class="bench__column bench__column--flow">
+            <section class="card card--swatch" aria-labelledby="swatch-heading">
+              <h2 id="swatch-heading" class="card__title">Live swatch</h2>
+              <div class="swatch" id="swatch" role="img" aria-label="Live colour swatch"></div>
+              <div class="swatch__meta">
+                <span class="badge" id="gamut-badge">In gamut</span>
+                <code id="swatch-hex">#FF0000</code>
+              </div>
+            </section>
+
+            <section class="card" aria-labelledby="results-heading">
+              <h2 id="results-heading" class="card__title">Results</h2>
+              <table class="results" id="results-table">
+                <caption class="visually-hidden">
+                  Converted colour values with their reference white and observer
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Space</th>
+                    <th scope="col">Values</th>
+                    <th scope="col">Reference</th>
+                  </tr>
+                </thead>
+                <tbody id="results-body"></tbody>
+              </table>
+              <div class="actions">
+                <button class="button" type="button" data-copy="results">Copy results</button>
+                <button class="button" type="button" data-copy="csv">Copy as CSV</button>
+                <button class="button" type="button" data-copy="json">Copy as JSON</button>
+                <span class="copy-feedback" id="copy-feedback" role="status" aria-live="polite"></span>
+              </div>
+            </section>
+          </div>
+
+          <!-- Comparison -->
+          <div class="bench__column bench__column--compare">
+            <section class="card" aria-labelledby="compare-heading">
+              <h2 id="compare-heading" class="card__title">Compare</h2>
+              <p class="card__hint">A second colour, for difference measurement.</p>
+
+              <label class="field">
+                <span class="field__label">Compare with (hex)</span>
+                <input type="text" id="compare-hex" value="#00FF00" spellcheck="false" autocomplete="off" />
+              </label>
+
+              <div class="swatch-pair">
+                <div class="swatch-pair__item">
+                  <div class="swatch swatch--small" id="swatch-a" role="img" aria-label="Primary colour"></div>
+                  <span id="compare-a-label">Sample A</span>
+                </div>
+                <div class="swatch-pair__item">
+                  <div class="swatch swatch--small" id="swatch-b" role="img" aria-label="Comparison colour"></div>
+                  <span id="compare-b-label">Sample B</span>
+                </div>
+              </div>
+
+              <dl class="delta-list" id="delta-list"></dl>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────────── Print ───────────────────────────── -->
+      <section class="panel" data-panel="print" aria-labelledby="print-heading" hidden>
+        <h1 id="print-heading" class="panel__title">Print</h1>
+        <p class="panel__intro">
+          Profile-driven separation through a local colour-management module. Profile bytes stay in
+          this browser session and are never uploaded.
+        </p>
+
+        <div class="bench bench--print">
+          <div class="bench__column">
+            <section class="card" aria-labelledby="profiles-heading">
+              <h2 id="profiles-heading" class="card__title">Profiles</h2>
+
+              <label class="field">
+                <span class="field__label">Source profile (RGB)</span>
+                <select id="source-profile"><option value="">None loaded</option></select>
+              </label>
+
+              <label class="field">
+                <span class="field__label">Output profile (CMYK)</span>
+                <select id="destination-profile"><option value="">None loaded</option></select>
+              </label>
+
+              <div class="file-input">
+                <label class="button button--file" for="profile-file">Load ICC profile…</label>
+                <input type="file" id="profile-file" accept=".icc,.icm" hidden />
+                <p class="field__hint" id="profile-status">
+                  No profile loaded. Use the built-in sRGB source until you add a profile.
+                </p>
+              </div>
+
+              <div class="profile-meta" id="profile-meta" hidden>
+                <h3 class="card__subtitle">Profile metadata</h3>
+                <dl id="profile-meta-list"></dl>
+              </div>
+            </section>
+
+            <section class="card" aria-labelledby="intent-heading">
+              <h2 id="intent-heading" class="card__title">Transform options</h2>
+
+              <label class="field">
+                <span class="field__label">Rendering intent</span>
+                <select id="rendering-intent"></select>
+              </label>
+              <p class="field__hint" id="intent-hint"></p>
+
+              <label class="checkbox">
+                <input type="checkbox" id="bpc" />
+                <span>Black-point compensation</span>
+              </label>
+
+              <label class="field">
+                <span class="field__label">Total ink coverage limit (%)</span>
+                <input type="number" id="tac-limit" placeholder="Set a limit from your job data" min="0" max="400" step="1" />
+              </label>
+              <p class="field__hint">
+                There is no universal TAC limit. Compare the calculated coverage only against a limit
+                you set or against documented profile and process data.
+              </p>
+            </section>
+          </div>
+
+          <div class="bench__column">
+            <section class="card" aria-labelledby="separation-heading">
+              <h2 id="separation-heading" class="card__title">Separation</h2>
+              <p class="card__hint" id="separation-source">Enter a colour in the Conversion panel.</p>
+
+              <div class="separation" id="separation" hidden>
+                <div class="separation__scale">
+                  Each bar is scaled to the total ink coverage of this separation.
+                </div>
+                <div class="ink-row">
+                  <span class="ink-row__label">C</span>
+                  <div class="ink-bar"><div class="ink-bar__fill" id="ink-c"></div></div>
+                  <span class="ink-row__value" id="ink-c-value">0%</span>
+                </div>
+                <div class="ink-row">
+                  <span class="ink__label ink-row__label">M</span>
+                  <div class="ink-bar"><div class="ink-bar__fill" id="ink-m"></div></div>
+                  <span class="ink-row__value" id="ink-m-value">0%</span>
+                </div>
+                <div class="ink-row">
+                  <span class="ink-row__label">Y</span>
+                  <div class="ink-bar"><div class="ink-bar__fill" id="ink-y"></div></div>
+                  <span class="ink-row__value" id="ink-y-value">0%</span>
+                </div>
+                <div class="ink-row">
+                  <span class="ink-row__label">K</span>
+                  <div class="ink-bar"><div class="ink-bar__fill" id="ink-k"></div></div>
+                  <span class="ink-row__value" id="ink-k-value">0%</span>
+                </div>
+              </div>
+
+              <div class="tac" id="tac-block" hidden>
+                <div class="tac__row">
+                  <span class="tac__label">Total ink coverage</span>
+                  <span class="tac__value" id="tac-value">0%</span>
+                </div>
+                <div class="tac__row">
+                  <span class="tac__label">Against your limit</span>
+                  <span class="tac__value" id="tac-verdict">No limit set</span>
+                </div>
+              </div>
+
+              <p class="provenance" id="provenance"></p>
+            </section>
+
+            <section class="card" aria-labelledby="condition-heading">
+              <h2 id="condition-heading" class="card__title">Print condition</h2>
+              <p class="card__hint">
+                Record the conditions of the job. This describes the work; it does not certify it.
+              </p>
+
+              <div class="fields fields--two">
+                <label class="field">
+                  <span class="field__label">Name</span>
+                  <input type="text" id="condition-name" placeholder="Coated gloss, FOGRA51" />
+                </label>
+                <label class="field">
+                  <span class="field__label">Stock</span>
+                  <input type="text" id="condition-stock" placeholder="250 gsm coated" />
+                </label>
+                <label class="field">
+                  <span class="field__label">Process</span>
+                  <select id="condition-process"></select>
+                </label>
+                <label class="field">
+                  <span class="field__label">Finishing</span>
+                  <select id="condition-finishing"></select>
+                </label>
+                <label class="field">
+                  <span class="field__label">Measurement condition</span>
+                  <select id="condition-measurement"></select>
+                </label>
+                <label class="field">
+                  <span class="field__label">Backing</span>
+                  <input type="text" id="condition-backing" placeholder="White / gray backing" />
+                </label>
+                <label class="field field--wide">
+                  <span class="field__label">Instrument</span>
+                  <input type="text" id="condition-instrument" placeholder="Spectrophotometer model" />
+                </label>
+                <label class="field field--wide">
+                  <span class="field__label">Job notes</span>
+                  <textarea id="condition-notes" rows="3"></textarea>
+                </label>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────── Quality control ──────────────────── -->
+      <section class="panel" data-panel="qc" aria-labelledby="qc-heading" hidden>
+        <h1 id="qc-heading" class="panel__title">Quality control</h1>
+        <p class="panel__intro">
+          Compare target and measured Lab values. These are calculated differences between the
+          values you supply; they are not instrument measurements taken here.
+        </p>
+
+        <div class="bench">
+          <div class="bench__column">
+            <section class="card" aria-labelledby="qc-input-heading">
+              <h2 id="qc-input-heading" class="card__title">Patch data</h2>
+              <p class="card__hint">
+                Paste CSV with the columns
+                <code>patch</code>, <code>target_l</code>, <code>target_a</code>,
+                <code>target_b</code>, <code>measured_l</code>, <code>measured_a</code>,
+                <code>measured_b</code>.
+              </p>
+
+              <label class="field field--wide">
+                <span class="field__label">CSV</span>
+                <textarea id="qc-csv" rows="8" spellcheck="false" placeholder="patch,target_l,target_a,target_b,measured_l,measured_a,measured_b"></textarea>
+              </label>
+
+              <label class="field">
+                <span class="field__label">Tolerance (ΔE00)</span>
+                <input type="number" id="qc-tolerance" placeholder="Set your tolerance" min="0" step="0.1" />
+              </label>
+              <p class="field__hint">
+                The tolerance is yours to set. Without one, no pass or fail verdict is produced.
+              </p>
+
+              <div class="actions">
+                <button class="button" type="button" id="qc-run">Run comparison</button>
+                <button class="button" type="button" id="qc-sample">Load example</button>
+              </div>
+
+              <p class="field__error" id="qc-error" role="alert" hidden></p>
+            </section>
+          </div>
+
+          <div class="bench__column">
+            <section class="card" aria-labelledby="qc-report-heading">
+              <h2 id="qc-report-heading" class="card__title">Report</h2>
+
+              <div class="qc-summary" id="qc-summary" hidden>
+                <div class="stat">
+                  <span class="stat__label">Patches</span>
+                  <span class="stat__value" id="qc-count">0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Mean ΔE00</span>
+                  <span class="stat__value" id="qc-mean">0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Max ΔE00</span>
+                  <span class="stat__value" id="qc-max">0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Verdict</span>
+                  <span class="stat__value" id="qc-verdict">—</span>
+                </div>
+              </div>
+
+              <div class="qc-table-wrap">
+                <table class="results results--qc" id="qc-table" hidden>
+                  <caption class="visually-hidden">Per-patch colour differences</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Patch</th>
+                      <th scope="col">Target L*a*b*</th>
+                      <th scope="col">Measured L*a*b*</th>
+                      <th scope="col">ΔE76</th>
+                      <th scope="col">ΔE00</th>
+                      <th scope="col">Result</th>
+                    </tr>
+                  </thead>
+                  <tbody id="qc-body"></tbody>
+                </table>
+              </div>
+
+              <p class="field__hint" id="qc-empty">No comparison has been run yet.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────── References ───────────────────────── -->
+      <section class="panel" data-panel="references" aria-labelledby="references-heading" hidden>
+        <h1 id="references-heading" class="panel__title">References &amp; limitations</h1>
+
+        <div class="bench">
+          <div class="bench__column">
+            <section class="card" aria-labelledby="limits-heading">
+              <h2 id="limits-heading" class="card__title">What this tool does and does not do</h2>
+              <ul class="prose-list">
+                <li>
+                  <strong>Colorimetric math and ICC profile conversions are separate paths.</strong>
+                  They are labelled separately throughout, because they answer different questions.
+                </li>
+                <li>
+                  <strong>CMYK is not a universal colour space.</strong> Every separation shown here is
+                  defined by the profiles, rendering intent, colour-management module and options in
+                  force at that moment.
+                </li>
+                <li>
+                  <strong>A soft proof is not a contract proof.</strong> Browser rendering cannot certify
+                  a display or a print process. Screen calibration, viewing conditions and the output
+                  profile all affect what you see.
+                </li>
+                <li>
+                  <strong>FOGRA51 and FOGRA52 are informative examples</strong> of standardized print
+                  conditions, not substitutes for the actual job profile or a press contract.
+                </li>
+                <li>
+                  <strong>No universal total ink coverage limit is assumed.</strong> Coverage is a
+                  calculated sum; it is compared only against a limit you set or documented
+                  profile and process data.
+                </li>
+                <li>
+                  <strong>Profile processing stays local.</strong> Profile bytes are held in this
+                  browser session only and are never uploaded.
+                </li>
+              </ul>
+            </section>
+
+            <section class="card" aria-labelledby="measurement-heading">
+              <h2 id="measurement-heading" class="card__title">Measurement scope</h2>
+              <p class="card__hint">
+                ChromaLab does not take measurements. Spectral measurement claims are out of scope
+                unless spectral data and the relevant measurement geometry and observer inputs are
+                supplied.
+              </p>
+            </section>
+          </div>
+
+          <div class="bench__column">
+            <section class="card" aria-labelledby="sources-heading">
+              <h2 id="sources-heading" class="card__title">Industry sources</h2>
+
+              <div class="source">
+                <h3 class="card__subtitle">ICC</h3>
+                <p>
+                  Device colour management combines profiles through a Colour Management Module.
+                  Output profiles can describe CMYK and other device colour encodings, and rendering
+                  intent controls how out-of-gamut colours are handled. The ICC identifies Bradford
+                  as a widely used D50↔D65 chromatic adaptation approach.
+                </p>
+                <p class="source__cite">ICC colour-management FAQ</p>
+              </div>
+
+              <div class="source">
+                <h3 class="card__subtitle">LittleCMS</h3>
+                <p>
+                  LittleCMS describes itself as an ICC colour-management module supporting profile
+                  transforms, soft proofing, gamut checking, black-point compensation and multicolor
+                  workflows.
+                </p>
+                <p class="source__cite">LittleCMS colour engine — <code>lcms-wasm</code></p>
+              </div>
+
+              <div class="source">
+                <h3 class="card__subtitle">Fogra &amp; ECI</h3>
+                <p>
+                  Fogra's characterisation-data reference lists FOGRA51 for sheet-fed coated offset
+                  and FOGRA52 for uncoated stock, and explains that profile separation results may
+                  vary even when profiles use the same characterisation data. Its data redistribution
+                  terms require the data to remain unmodified and Fogra to be identified as the
+                  source. ECI describes FOGRA51/52 as conditions developed for ISO 12647-2:2013 and
+                  notes the importance of D50 viewing and measurement mode M1 when optical
+                  brighteners are involved.
+                </p>
+                <p class="source__cite">
+                  Fogra characterisation data · ECI offset standards · ICC profile registry:
+                  PSO Uncoated v3 / FOGRA52
+                </p>
+              </div>
+            </section>
+
+            <section class="card" aria-labelledby="licence-heading">
+              <h2 id="licence-heading" class="card__title">Dependencies &amp; licences</h2>
+              <dl class="assumptions">
+                <div>
+                  <dt>Colour engine</dt>
+                  <dd>Written for this project. MIT licence.</dd>
+                </div>
+                <div>
+                  <dt>Colour management module</dt>
+                  <dd>
+                    LittleCMS via <code>lcms-wasm</code> — MIT licence. LittleCMS itself is MIT.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Build tool</dt>
+                  <dd>Vite — MIT licence.</dd>
+                </div>
+              </dl>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <p>
+        ChromaLab — calculated colorimetry and print production. Every result states its reference
+        white, observer, profile, intent and assumptions.
+      </p>
+    </footer>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

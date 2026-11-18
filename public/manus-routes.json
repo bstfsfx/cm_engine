@@ -1,0 +1,11 @@
+{
+  "$schema": "https://manus.im/schema/route-manifest.json",
+  "routes": [
+    {
+      "path": "/",
+      "type": "page",
+      "src": "index.html",
+      "title": "ChromaLab — Colorimetric & Print Workbench"
+    }
+  ]
+}
