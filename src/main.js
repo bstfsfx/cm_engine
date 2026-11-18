@@ -50,6 +50,12 @@ import {
 
 const $ = (id) => document.getElementById(id);
 
+/** Update a banner chip only when that banner is present in the document. */
+function setChip(id, value) {
+  const element = $(id);
+  if (element) element.textContent = value;
+}
+
 /* ─────────────────────────── Application state ─────────────────────────── */
 
 /**
@@ -76,23 +82,53 @@ const state = {
   printCondition: createPrintCondition()
 };
 
-/* ─────────────────────────── Tabs ─────────────────────────── */
+/* ─────────────────────────── Panel navigation ─────────────────────────── */
+
+const PANEL_TITLES = {
+  conversion: "Conversion",
+  print: "Print separation",
+  qc: "Quality control",
+  references: "Standards & limits"
+};
 
 function initTabs() {
-  const tabs = document.querySelectorAll(".tab");
+  const links = document.querySelectorAll(".nav-link[data-panel]");
+  const panels = document.querySelectorAll(".panel[data-panel]");
+  const crumb = document.getElementById("crumb-current");
 
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      tabs.forEach((other) => {
-        const selected = other === tab;
-        other.setAttribute("aria-selected", String(selected));
-      });
-
-      document.querySelectorAll(".panel").forEach((panel) => {
-        panel.hidden = panel.dataset.panel !== tab.dataset.panel;
-      });
+  function showPanel(name) {
+    links.forEach((link) => {
+      const active = link.dataset.panel === name;
+      link.classList.toggle("on", active);
+      if (active) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
     });
+
+    panels.forEach((panel) => {
+      panel.hidden = panel.dataset.panel !== name;
+    });
+
+    if (crumb) crumb.textContent = PANEL_TITLES[name] ?? name;
+
+    const main = document.querySelector(".main");
+    if (main) main.scrollTop = 0;
+
+    if (location.hash !== `#${name}`) {
+      history.replaceState(null, "", `#${name}`);
+    }
+  }
+
+  links.forEach((link) => {
+    link.addEventListener("click", () => showPanel(link.dataset.panel));
   });
+
+  window.addEventListener("hashchange", () => {
+    const name = location.hash.slice(1);
+    if (name in PANEL_TITLES) showPanel(name);
+  });
+
+  const initial = location.hash.slice(1);
+  showPanel(initial in PANEL_TITLES ? initial : "conversion");
 }
 
 /* ─────────────────────────── Input space switch ─────────────────────────── */
@@ -339,11 +375,37 @@ function renderComparison() {
   `;
 }
 
+/** Keep the banner chips and status bar in step with the workbench state. */
+function updateChrome() {
+  if (state.sampleRgb) {
+    setChip("hero-white", state.whitePoint);
+    setChip("hero-sample", rgbToHex(state.sampleRgb));
+    setChip("status-white", `${state.whitePoint} / 2°`);
+  }
+
+  const source = getSourceProfile();
+  const destination = state.profiles.get(state.destinationProfileKey) ?? null;
+
+  setChip("hero-source", source?.label ?? "Not loaded");
+  setChip("hero-destination", destination?.label ?? "Not loaded");
+  setChip(
+    "hero-intent",
+    RENDERING_INTENTS.find((entry) => entry.value === state.intent)?.label ?? "—"
+  );
+
+  const tacBlock = $("tac-block");
+  setChip("hero-tac", tacBlock && !tacBlock.hidden ? $("tac-value").textContent : "—");
+
+  const sourceSelect = $("source-profile");
+  setChip("status-profile", sourceSelect?.selectedOptions[0]?.textContent ?? "Built-in sRGB");
+}
+
 function renderAll() {
   renderSwatch();
   renderResults();
   renderComparison();
   renderPrint();
+  updateChrome();
 }
 
 /* ─────────────────────────── Copy actions ─────────────────────────── */
@@ -600,7 +662,7 @@ function getSourceProfile() {
   return state.srgbProfile;
 }
 
-function renderPrint() {
+function renderPrintCore() {
   const separation = $("separation");
   const tacBlock = $("tac-block");
   const provenance = $("provenance");
@@ -688,6 +750,11 @@ function renderPrint() {
   });
 }
 
+function renderPrint() {
+  renderPrintCore();
+  updateChrome();
+}
+
 /* ─────────────────────────── QC panel ─────────────────────────── */
 
 const QC_SAMPLE = `patch,target_l,target_a,target_b,measured_l,measured_a,measured_b
@@ -706,9 +773,19 @@ function initQc() {
   $("qc-run").addEventListener("click", runQc);
 }
 
+function updateQcHero(report) {
+  setChip("hero-patches", report ? String(report.summary.patchCount) : "—");
+  setChip("hero-mean", report ? report.summary.meanDeltaE00.toFixed(3) : "—");
+  setChip("hero-max", report ? report.summary.maxDeltaE00.toFixed(3) : "—");
+
+  const tolerance = $("qc-tolerance").value.trim();
+  setChip("hero-tolerance", tolerance === "" ? "Not set" : tolerance);
+}
+
 function runQc() {
   const errorElement = $("qc-error");
   const text = $("qc-csv").value;
+  updateQcHero(null);
 
   if (!text.trim()) {
     errorElement.hidden = false;
@@ -754,6 +831,7 @@ function runQc() {
   $("qc-count").textContent = String(report.summary.patchCount);
   $("qc-mean").textContent = report.summary.meanDeltaE00.toFixed(3);
   $("qc-max").textContent = report.summary.maxDeltaE00.toFixed(3);
+  updateQcHero(report);
 
   const verdict = $("qc-verdict");
   if (report.summary.pass === undefined) {
