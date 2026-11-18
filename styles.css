@@ -337,21 +337,73 @@ button.r:hover {
 /* ─────────────────────────── Sidebar ─────────────────────────── */
 
 .side {
+  /* Sidebar banner palette — follows the active panel (set in main.js). */
+  --side-1: #f0f7fa;
+  --side-2: #d4e6f0;
+  --side-accent: #1f7a9c;
+  --side-soft: #e5f2f7;
+
   grid-area: side;
   padding: 0.85rem 0.5rem;
-  background: var(--surface);
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(90deg, #00a4e4 0%, #e4007f 38%, #f5c400 68%, #2f7d4f 100%),
+    linear-gradient(180deg, var(--side-1) 0%, var(--side-2) 26%, var(--surface) 72%);
+  background-size: 100% 3px, 100% 100%;
+  background-position: top left, top left;
+  background-repeat: no-repeat, no-repeat;
   border-right: 1px solid var(--line);
   overflow-y: auto;
+  transition: background-color 180ms ease;
 }
 
+.side[data-active="print"] {
+  --side-1: #f1edf3;
+  --side-2: #ded9e8;
+  --side-accent: #7a4f91;
+  --side-soft: #efe9f4;
+}
+
+.side[data-active="qc"] {
+  --side-1: #eaf5ef;
+  --side-2: #d3e8dc;
+  --side-accent: #2f7d4f;
+  --side-soft: #e4f1e9;
+}
+
+.side[data-active="references"] {
+  --side-1: #f6f8fa;
+  --side-2: #e5eaee;
+  --side-accent: #5b6b7b;
+  --side-soft: #eef1f4;
+}
+
+/* Each group carries its module colour, like a miniature banner label. */
 .side .grp {
+  position: relative;
   font-size: 10px;
   font-weight: 650;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--ink-3);
-  padding: 0.55rem 0.5rem 0.3rem;
+  color: var(--grp-accent, var(--ink-3));
+  padding: 0.55rem 0.5rem 0.3rem 0.85rem;
 }
+
+.side .grp::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.72rem;
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--grp-accent, var(--ink-3));
+}
+
+.side .grp:nth-of-type(1) { --grp-accent: #1f7a9c; }
+.side .grp:nth-of-type(2) { --grp-accent: #7a4f91; }
+.side .grp:nth-of-type(3) { --grp-accent: #2f7d4f; }
+.side .grp:nth-of-type(4) { --grp-accent: #5b6b7b; }
 
 .side hr {
   border: 0;
@@ -381,9 +433,10 @@ button.r:hover {
 }
 
 .item.on {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--side-soft, var(--accent-soft));
+  color: var(--side-accent, var(--accent));
   font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--side-accent, var(--accent));
 }
 
 .item .ic {
@@ -406,8 +459,8 @@ button.r:hover {
 
 .item.on .tag {
   background: var(--surface);
-  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
-  color: var(--accent);
+  border-color: color-mix(in srgb, var(--side-accent, var(--accent)) 35%, transparent);
+  color: var(--side-accent, var(--accent));
 }
 
 /* ─────────────────────────── Main ─────────────────────────── */

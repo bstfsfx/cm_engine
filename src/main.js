@@ -96,9 +96,11 @@ function initTabs() {
   const panels = document.querySelectorAll(".panel[data-panel]");
   const crumb = document.getElementById("crumb-current");
   const rail = document.querySelector(".rail");
+  const side = document.querySelector(".side");
 
   function showPanel(name) {
     if (rail) rail.dataset.active = name;
+    if (side) side.dataset.active = name;
 
     links.forEach((link) => {
       const active = link.dataset.panel === name;
