@@ -16,8 +16,8 @@
     "test": "node --test \"tests/**/*.test.js\"",
     "test:watch": "node --test --watch \"tests/**/*.test.js\"",
     "serve": "node scripts/serve.js",
-    "deploy": "vercel deploy --prod --yes --name chromatic_color_engine",
-    "deploy:preview": "vercel deploy --yes --name chromatic_color_engine"
+    "deploy": "vercel deploy --prod --yes --name colorengine",
+    "deploy:preview": "vercel deploy --yes --name colorengine"
   },
   "dependencies": {
     "lcms-wasm": "1.0.5"

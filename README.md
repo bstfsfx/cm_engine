@@ -25,11 +25,11 @@ npm run preview
 
 ## Deployment
 
-Deployed to Vercel as the project **`chromatic_color_engine`**:
+Deployed to Vercel as the project **`colorengine`** (renamed from `chromatic_color_engine`):
 
 | | |
 | --- | --- |
-| Production URL | https://chromaticcolorengine.vercel.app |
+| Production URL | https://colorengine.vercel.app |
 | Framework preset | Vite |
 | Build command | `npm run build` |
 | Output directory | `dist` |
