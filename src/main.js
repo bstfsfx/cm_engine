@@ -95,8 +95,11 @@ function initTabs() {
   const links = document.querySelectorAll(".nav-link[data-panel]");
   const panels = document.querySelectorAll(".panel[data-panel]");
   const crumb = document.getElementById("crumb-current");
+  const rail = document.querySelector(".rail");
 
   function showPanel(name) {
+    if (rail) rail.dataset.active = name;
+
     links.forEach((link) => {
       const active = link.dataset.panel === name;
       link.classList.toggle("on", active);
