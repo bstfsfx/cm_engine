@@ -23,6 +23,35 @@ npm run build
 npm run preview
 ```
 
+## Deployment
+
+Deployed to Vercel as the project **`chromatic_color_engine`**:
+
+| | |
+| --- | --- |
+| Production URL | https://chromaticcolorengine.vercel.app |
+| Framework preset | Vite |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Node version | 22 (`.nvmrc`) |
+
+Deploy manually with:
+
+```bash
+npm run deploy          # production
+npm run deploy:preview  # preview deployment
+```
+
+### Git integration
+
+The project is linked to `bstfsfx/cm_engine` on GitHub, with `main` as the production branch.
+
+> **Note on repository access:** the Vercel GitHub App must be granted access to the `cm_engine` repository for push-triggered builds to run. Git-connected deployments appear with the status `BLOCKED` until the App has access, because Vercel resolves the source commit through the App. The working repositories linked to this Vercel account (`comtw`, `comhk`, `Floral_Boutique`) are public; `cm_engine` is private and was created after the App was installed.
+
+To grant access: **GitHub → Settings → Applications → Installed GitHub Apps → Vercel → Configure → Repository access**, then either add `cm_engine` individually or switch to **All repositories**.
+
+Until then, `npm run deploy` publishes the current state.
+
 ## 1. Development objectives
 
 **Stage A · Foundation**
