@@ -44,13 +44,16 @@ npm run deploy:preview  # preview deployment
 
 ### Git integration
 
-The project is linked to `bstfsfx/cm_engine` on GitHub, with `main` as the production branch.
+The project is linked to `bstfsfx/cm_engine` on GitHub, with `main` as the production branch. A push to `main` triggers a production build and redeploy automatically.
 
-> **Note on repository access:** the Vercel GitHub App must be granted access to the `cm_engine` repository for push-triggered builds to run. Git-connected deployments appear with the status `BLOCKED` until the App has access, because Vercel resolves the source commit through the App. The working repositories linked to this Vercel account (`comtw`, `comhk`, `Floral_Boutique`) are public; `cm_engine` is private and was created after the App was installed.
+> **Note on repository access:** push-triggered builds require the Vercel GitHub App to be able to read the repository. Vercel resolves the source commit through the App, so a deployment that cannot be resolved is left in the `BLOCKED` state rather than failing outright. If that happens, confirm the App's access under **GitHub → Settings → Applications → Installed GitHub Apps → Vercel → Configure → Repository access**, and that the repository is reachable by the App.
 
-To grant access: **GitHub → Settings → Applications → Installed GitHub Apps → Vercel → Configure → Repository access**, then either add `cm_engine` individually or switch to **All repositories**.
+Deploy manually with:
 
-Until then, `npm run deploy` publishes the current state.
+```bash
+npm run deploy          # production
+npm run deploy:preview  # preview deployment
+```
 
 ## 1. Development objectives
 
