@@ -15,7 +15,9 @@
     "preview": "vite preview --port 3000 --strictPort",
     "test": "node --test \"tests/**/*.test.js\"",
     "test:watch": "node --test --watch \"tests/**/*.test.js\"",
-    "serve": "node scripts/serve.js"
+    "serve": "node scripts/serve.js",
+    "deploy": "vercel deploy --prod --yes --name chromatic_color_engine",
+    "deploy:preview": "vercel deploy --yes --name chromatic_color_engine"
   },
   "dependencies": {
     "lcms-wasm": "1.0.5"
