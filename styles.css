@@ -42,29 +42,6 @@
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #0e151c;
-    --surface: #16202a;
-    --surface-2: #1b2833;
-    --line: #2a3743;
-    --line-2: #3a4a58;
-
-    --ink: #e6edf3;
-    --ink-2: #a8b6c3;
-    --ink-3: #7d8d9b;
-
-    --accent: #4cc4e8;
-    --accent-bright: #22d3ee;
-    --accent-soft: #122c39;
-
-    --pass: #4ade80;
-    --warn: #fbbf24;
-    --fail: #f87171;
-
-    --shadow: 0 1px 2px rgb(0 0 0 / 30%);
-  }
-}
 
 /* ─────────────────────────── Reset & base ─────────────────────────── */
 
@@ -417,8 +394,8 @@ button.r:hover {
   overflow: hidden;
   border-bottom: 1px solid var(--line);
   background:
-    radial-gradient(120% 140% at 100% 0%, #dceaf2 0%, rgba(220 234 242 / 0) 58%),
-    linear-gradient(168deg, #f4f8fa 0%, #e8eff4 46%, #dde8ef 100%);
+    radial-gradient(120% 140% at 100% 0%, #cfe5f0 0%, rgba(207 229 240 / 0) 62%),
+    linear-gradient(168deg, #f0f7fa 0%, #e2edf4 44%, #d1e0eb 100%);
 }
 
 .hero::before {
@@ -426,8 +403,8 @@ button.r:hover {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgb(31 122 156 / 6%) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(31 122 156 / 6%) 1px, transparent 1px);
+    linear-gradient(to right, rgb(31 122 156 / 9%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(31 122 156 / 9%) 1px, transparent 1px);
   background-size: 46px 46px;
   mask-image: radial-gradient(120% 100% at 50% 0%, #000 20%, transparent 78%);
   -webkit-mask-image: radial-gradient(120% 100% at 50% 0%, #000 20%, transparent 78%);
@@ -444,13 +421,13 @@ button.r:hover {
   border-radius: 50%;
   background: conic-gradient(
     from 210deg,
-    rgb(10 159 212 / 16%),
-    rgb(216 27 122 / 13%),
-    rgb(224 180 0 / 13%),
-    rgb(10 159 212 / 16%)
+    rgb(10 159 212 / 22%),
+    rgb(216 27 122 / 18%),
+    rgb(224 180 0 / 18%),
+    rgb(10 159 212 / 22%)
   );
   filter: blur(42px);
-  opacity: 0.75;
+  opacity: 0.85;
   pointer-events: none;
 }
 
@@ -520,14 +497,14 @@ button.r:hover {
 /* Print — warm, ink-like, separation-plate treatment */
 .hero--print {
   background:
-    radial-gradient(110% 130% at 0% 0%, #f2eef3 0%, rgba(242 238 243 / 0) 55%),
-    linear-gradient(160deg, #f6f4f7 0%, #e9e6ee 48%, #dddbe6 100%);
+    radial-gradient(110% 130% at 0% 0%, #e9e1ee 0%, rgba(233 225 238 / 0) 58%),
+    linear-gradient(160deg, #f0ecf2 0%, #e0dbe7 48%, #d0cbd9 100%);
 }
 
 .hero--print::before {
   background-image:
-    linear-gradient(to right, rgb(31 122 156 / 7%) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(31 122 156 / 7%) 1px, transparent 1px);
+    linear-gradient(to right, rgb(31 122 156 / 10%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(31 122 156 / 10%) 1px, transparent 1px);
   background-size: 34px 34px;
 }
 
@@ -551,14 +528,14 @@ button.r:hover {
 /* Quality control — cool, data-forward, tighter grid */
 .hero--qc {
   background:
-    radial-gradient(120% 130% at 100% 0%, #d9ece2 0%, rgba(217 236 226 / 0) 55%),
-    linear-gradient(160deg, #f2f7f4 0%, #e6efea 50%, #dbe7e1 100%);
+    radial-gradient(120% 130% at 100% 0%, #c9e7d8 0%, rgba(201 231 216 / 0) 58%),
+    linear-gradient(160deg, #eaf5ef 0%, #d9ebe1 50%, #c9ded2 100%);
 }
 
 .hero--qc::before {
   background-image:
-    linear-gradient(to right, rgb(47 125 79 / 8%) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(47 125 79 / 8%) 1px, transparent 1px);
+    linear-gradient(to right, rgb(47 125 79 / 11%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(47 125 79 / 11%) 1px, transparent 1px);
   background-size: 24px 24px;
   mask-image: radial-gradient(140% 110% at 20% 0%, #000 15%, transparent 80%);
   -webkit-mask-image: radial-gradient(140% 110% at 20% 0%, #000 15%, transparent 80%);
@@ -566,10 +543,10 @@ button.r:hover {
 
 .hero--qc::after {
   background:
-    radial-gradient(closest-side, rgb(47 125 79 / 15%), transparent 72%),
-    radial-gradient(closest-side, rgb(31 122 156 / 12%), transparent 70%);
+    radial-gradient(closest-side, rgb(47 125 79 / 20%), transparent 72%),
+    radial-gradient(closest-side, rgb(31 122 156 / 17%), transparent 70%);
   filter: blur(40px);
-  opacity: 0.8;
+  opacity: 0.85;
   right: -60px;
   top: -150px;
   width: 500px;
@@ -596,8 +573,8 @@ button.r:hover {
 /* References — restrained, paper-like, almost no colour */
 .hero--refs {
   background:
-    radial-gradient(110% 130% at 50% 0%, #f7f8f9 0%, rgba(247 248 249 / 0) 60%),
-    linear-gradient(180deg, #f8f9fa 0%, #eef0f2 100%);
+    radial-gradient(110% 130% at 50% 0%, #f0f3f6 0%, rgba(240 243 246 / 0) 60%),
+    linear-gradient(180deg, #f5f7f9 0%, #e5eaee 100%);
 }
 
 .hero--refs::before {
@@ -638,72 +615,6 @@ button.r:hover {
 }
 
 /* Dark-mode banners */
-@media (prefers-color-scheme: dark) {
-  .hero,
-  .hero--conversion {
-    background:
-      radial-gradient(120% 140% at 100% 0%, #17313f 0%, rgba(23 49 63 / 0) 58%),
-      linear-gradient(168deg, #14202a 0%, #12212b 46%, #101c26 100%);
-  }
-
-  .hero::before {
-    background-image:
-      linear-gradient(to right, rgb(76 196 232 / 9%) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(76 196 232 / 9%) 1px, transparent 1px);
-  }
-
-  .hero h1 {
-    color: #e6edf3;
-  }
-
-  .hero p {
-    color: #a8b6c3;
-  }
-
-  .hero .hero-tags span {
-    background: rgb(22 32 42 / 82%);
-    border-color: rgb(76 196 232 / 22%);
-    color: #a8b6c3;
-  }
-
-  .hero--print {
-    background:
-      radial-gradient(110% 130% at 0% 0%, #2a2233 0%, rgba(42 34 51 / 0) 55%),
-      linear-gradient(160deg, #1d1b26 0%, #1a1a25 48%, #161620 100%);
-  }
-
-  .hero--qc {
-    background:
-      radial-gradient(120% 130% at 100% 0%, #16322a 0%, rgba(22 50 42 / 0) 55%),
-      linear-gradient(160deg, #14251f 0%, #12241f 50%, #101f1b 100%);
-  }
-
-  .hero--qc .kicker,
-  .hero--qc .hero-tags b {
-    color: #6ee7a8;
-  }
-
-  .hero--qc .hero-tags span {
-    border-color: rgb(110 231 168 / 22%);
-    color: #a8c8b4;
-  }
-
-  .hero--refs {
-    background:
-      radial-gradient(110% 130% at 50% 0%, #1b2430 0%, rgba(27 36 48 / 0) 60%),
-      linear-gradient(180deg, #18212b 0%, #141d26 100%);
-  }
-
-  .hero--refs .kicker {
-    color: #9aa7b4;
-  }
-
-  .hero--refs .hero-tags span {
-    background: rgb(22 32 42 / 82%);
-    border-color: rgb(154 167 180 / 20%);
-    color: #9aa7b4;
-  }
-}
 
 /* ─────────────────────────── Layout ─────────────────────────── */
 
