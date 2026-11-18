@@ -24,3 +24,4 @@ yarn-error.log*
 # Test artefacts
 coverage/
 .playwright-mcp/
+.vercel
