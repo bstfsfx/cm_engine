@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="B">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,6 +9,17 @@
     />
     <title>ChromaLab — Colorimetric &amp; Print Workbench</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script>
+      // Apply the visitor's saved theme before paint to avoid a colour flash.
+      try {
+        var savedTheme = localStorage.getItem("chromalab-theme");
+        if (savedTheme === "A" || savedTheme === "B" || savedTheme === "C") {
+          document.documentElement.dataset.theme = savedTheme;
+        }
+      } catch (error) {
+        // Storage may be unavailable; the default theme B still applies.
+      }
+    </script>
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230e1620'/><rect x='6' y='8' width='20' height='4' fill='%2322d3ee'/><rect x='6' y='14' width='20' height='4' fill='%2338bdf8'/><rect x='6' y='20' width='20' height='4' fill='%2367e8f9'/></svg>"
@@ -38,6 +49,49 @@
 
         <span class="spacer"></span>
         <span class="pill"><i></i> Engine ready</span>
+
+        <div class="theme-picker">
+          <button
+            id="theme-toggle"
+            class="theme-toggle"
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="theme-menu"
+            aria-label="Colour theme preference"
+            title="Colour theme preference"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.9 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8h1.6A4.8 4.8 0 0 0 21 11c0-4.4-4-8-9-8Zm-5.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3.5 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"
+              />
+            </svg>
+            <span class="theme-toggle__word">Theme</span>
+            <b id="theme-current">B</b>
+            <span class="theme-toggle__chevron" aria-hidden="true">▾</span>
+          </button>
+
+          <div id="theme-menu" class="theme-menu" role="menu" aria-label="Colour theme" hidden>
+            <p class="theme-menu__title">Colour theme</p>
+            <button class="theme-option" type="button" role="menuitemradio" aria-checked="false" data-theme-value="A">
+              <span class="theme-option__swatch theme-option__swatch--a" aria-hidden="true"></span>
+              <span class="theme-option__text"><b>A</b><small>Instrument blue</small></span>
+              <span class="theme-option__check" aria-hidden="true">✓</span>
+            </button>
+            <button class="theme-option" type="button" role="menuitemradio" aria-checked="true" data-theme-value="B">
+              <span class="theme-option__swatch theme-option__swatch--b" aria-hidden="true"></span>
+              <span class="theme-option__text"><b>B</b><small>Enterprise</small></span>
+              <span class="theme-option__check" aria-hidden="true">✓</span>
+            </button>
+            <button class="theme-option" type="button" role="menuitemradio" aria-checked="false" data-theme-value="C">
+              <span class="theme-option__swatch theme-option__swatch--c" aria-hidden="true"></span>
+              <span class="theme-option__text"><b>C</b><small>Warm paper</small></span>
+              <span class="theme-option__check" aria-hidden="true">✓</span>
+            </button>
+          </div>
+        </div>
+
         <span class="avatar" title="Local session">BS</span>
       </header>
 

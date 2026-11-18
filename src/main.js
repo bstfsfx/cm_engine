@@ -875,9 +875,76 @@ function runQc() {
     .join("");
 }
 
+/* ─────────────────────────── Theme preference ─────────────────────────── */
+
+const THEME_KEY = "chromalab-theme";
+const THEMES = ["A", "B", "C"];
+
+function initThemePicker() {
+  const toggle = $("theme-toggle");
+  const menu = $("theme-menu");
+  const current = $("theme-current");
+  if (!toggle || !menu) return;
+
+  const options = [...menu.querySelectorAll(".theme-option")];
+
+  function setTheme(value, persist = true) {
+    const theme = THEMES.includes(value) ? value : "B";
+    document.documentElement.dataset.theme = theme;
+    if (current) current.textContent = theme;
+
+    options.forEach((option) => {
+      option.setAttribute("aria-checked", String(option.dataset.themeValue === theme));
+    });
+
+    if (persist) {
+      try {
+        localStorage.setItem(THEME_KEY, theme);
+      } catch {
+        // Storage may be blocked; the theme still applies for this session.
+      }
+    }
+  }
+
+  function closeMenu() {
+    menu.hidden = true;
+    toggle.setAttribute("aria-expanded", "false");
+  }
+
+  toggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const open = menu.hidden;
+    menu.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+
+  options.forEach((option) => {
+    option.addEventListener("click", () => {
+      setTheme(option.dataset.themeValue);
+      closeMenu();
+      toggle.focus();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".theme-picker")) closeMenu();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !menu.hidden) {
+      closeMenu();
+      toggle.focus();
+    }
+  });
+
+  // The inline head script has already applied a saved theme; mirror it in the UI.
+  setTheme(document.documentElement.dataset.theme, false);
+}
+
 /* ─────────────────────────── Boot ─────────────────────────── */
 
 async function boot() {
+  initThemePicker();
   initTabs();
   initInputSpace();
   initSampleInputs();
